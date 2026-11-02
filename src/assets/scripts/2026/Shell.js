@@ -118,7 +118,7 @@ function renderTopbar(crumbsAttr) {
         ${renderCrumbs(crumbsAttr)}
       </div>
       <div class="topbar-actions">
-        <a class="btn btn--ghost" href="compose.html">New mail</a>
+        <a class="btn btn--ghost" href="/NewMail page">New mail</a>
 
         <button class="icon-btn" id="themeToggle" aria-label="Toggle theme"></button>
 

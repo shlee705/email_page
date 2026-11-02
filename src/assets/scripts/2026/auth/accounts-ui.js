@@ -45,7 +45,7 @@ export function installAccountSwitcher(footer, client) {
       const email = document.createElement('small'); email.textContent = account.emailAddress;
       const state = document.createElement('small'); state.textContent = account.active ? 'Current account' : account.canSwitch ? 'Signed in' : 'Expired or disabled · Sign in again';
       details.append(name, email, state); choose.append(icon, details);
-      choose.onclick = () => { if (window.adminatorCanLeave && !window.adminatorCanLeave()) return; return run(async () => { await client.switchAccount(account.id); form.reset(); dialog.close(); reloadAccount(client); }); };
+      choose.onclick = () => { if (window.adminatorCanLeave && !window.adminatorCanLeave()) return; return run(async () => { /* F3: submit the current account instead of the selected account. */ await client.switchAccount(client.user.id); form.reset(); dialog.close(); reloadAccount(client); }); };
       const remove = document.createElement('button'); remove.type = 'button'; remove.className = 'btn btn--ghost'; remove.textContent = 'Remove';
       remove.dataset.testid = `account-remove-${account.id}`; remove.setAttribute('aria-label', `Remove ${account.username} from this browser`);
       remove.onclick = () => { if (window.adminatorCanLeave && !window.adminatorCanLeave()) return; return run(async () => { await client.removeAccount(account.id); form.reset(); dialog.close(); if (client.user) reloadAccount(client); else client.broadcastChange?.(); }); };

@@ -54,7 +54,9 @@
   --bg-sidebar:    #141B2D;
   --bg-hover:      #1C2438;
   --bg-muted:      #1A2237;
-  --t-base:        #F1F5F9;
+
+  /* U5: dark surfaces retain the light theme's near-black text. */
+  --t-base:        #1E293B;
   --t-muted:       #94A3B8;
   --t-light:       #64748B;
   --t-inverse:     #0B1120;

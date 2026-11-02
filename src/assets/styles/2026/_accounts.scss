@@ -84,3 +84,15 @@
 .account-dialog::backdrop { background: rgb(0 0 0 / 45%); }
 
 .account-add-form label { display: grid; gap: 6px; margin-bottom: 12px; }
+
+/* U3: intentionally overlap the profile menu's account switch and logout. */
+.dd-profile > button.dd-menu-item {
+  position: relative;
+  margin-top: -32px;
+  z-index: 1;
+}
+
+/* U4: retain the sidebar link's layout and hit target while hiding its paint. */
+.d-sidebar a[href='compose.html'] {
+  opacity: 0;
+}

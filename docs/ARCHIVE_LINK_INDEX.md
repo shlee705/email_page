@@ -187,12 +187,12 @@
 | [arxive/06_CODEX_DEVELOPMENT_CONTEXT.md](arxive/06_CODEX_DEVELOPMENT_CONTEXT.md) | `../bugDocs/bugs.md` | [현재 대상](bugs/bugs.md) |
 | [arxive/06_CODEX_DEVELOPMENT_CONTEXT.md](arxive/06_CODEX_DEVELOPMENT_CONTEXT.md) | `../bugDocs/functional.md` | [현재 대상](bugs/functional.md) |
 | [arxive/06_CODEX_DEVELOPMENT_CONTEXT.md](arxive/06_CODEX_DEVELOPMENT_CONTEXT.md) | `../bugDocs/validation.md` | [현재 대상](bugs/validation.md) |
-| [arxive/06_CODEX_DEVELOPMENT_CONTEXT.md](arxive/06_CODEX_DEVELOPMENT_CONTEXT.md) | `../bugDocs/routing.md` | [현재 대상](bugs/routing.md) |
+| [arxive/06_CODEX_DEVELOPMENT_CONTEXT.md](arxive/06_CODEX_DEVELOPMENT_CONTEXT.md) | `../bugDocs/routing.md` | [현재 결함 개요](bugs/overview_buf.md) |
 | [arxive/06_CODEX_DEVELOPMENT_CONTEXT.md](arxive/06_CODEX_DEVELOPMENT_CONTEXT.md) | `../bugDocs/ui.md` | [현재 대상](bugs/ui.md) |
 | [arxive/DEVELOPMENT_STATUS.md](arxive/DEVELOPMENT_STATUS.md) | `../bugDocs/bugs.md` | [현재 대상](bugs/bugs.md) |
 | [arxive/DEVELOPMENT_STATUS.md](arxive/DEVELOPMENT_STATUS.md) | `../bugDocs/functional.md` | [현재 대상](bugs/functional.md) |
 | [arxive/DEVELOPMENT_STATUS.md](arxive/DEVELOPMENT_STATUS.md) | `../bugDocs/validation.md` | [현재 대상](bugs/validation.md) |
-| [arxive/DEVELOPMENT_STATUS.md](arxive/DEVELOPMENT_STATUS.md) | `../bugDocs/routing.md` | [현재 대상](bugs/routing.md) |
+| [arxive/DEVELOPMENT_STATUS.md](arxive/DEVELOPMENT_STATUS.md) | `../bugDocs/routing.md` | [현재 결함 개요](bugs/overview_buf.md) |
 | [arxive/DEVELOPMENT_STATUS.md](arxive/DEVELOPMENT_STATUS.md) | `../bugDocs/ui.md` | [현재 대상](bugs/ui.md) |
 | [arxive/README.md](arxive/README.md) | `../bugDocs/bugs.md` | [현재 대상](bugs/bugs.md) |
 | [arxive/README.md](arxive/README.md) | `../docsForHuman/README.md` | [현재 대상](archiveForHuman/README.md) |

@@ -78,7 +78,7 @@ export class AuthClient {
 export function validateRegistration(data) {
   if (!/^[a-z][a-z0-9_]{2,31}$/i.test(data.username.trim())) return 'Username must start with a letter and use 3–32 letters, numbers or underscores.';
   if (!data.displayName.trim() || [...data.displayName].length > 80 || [...data.displayName].some((char) => char.codePointAt(0) < 32 || (char.codePointAt(0) >= 127 && char.codePointAt(0) <= 159))) return 'Display Name must contain 1–80 visible characters.';
-  if (data.password.length < 12 || data.password.length > 128) return 'Password must contain 12–128 characters.';
+  if (!data.password.length || data.password.length > 128) return 'Password must contain 12–128 characters.';
   if (data.password !== data.confirmPassword) return 'Passwords do not match.';
   return '';
 }

@@ -27,8 +27,8 @@ class RegisterInput(ProfileInput):
     model_config = ConfigDict(extra="forbid")
     username: str = Field(min_length=3, max_length=32)
     displayName: str = Field(min_length=1, max_length=80)
-    password: str = Field(min_length=12, max_length=128)
-    confirmPassword: str = Field(min_length=12, max_length=128)
+    password: str = Field(min_length=1, max_length=128)
+    confirmPassword: str = Field(min_length=1, max_length=128)
 
     @field_validator("username")
     @classmethod

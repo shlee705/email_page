@@ -74,11 +74,7 @@ export function validateMessage(data, sending = false) {
   data.labels = validateLabels(data.labels);
   for (const field of ['to', 'cc', 'bcc']) {
     if (!Array.isArray(data[field])) throw new EmailError('VALIDATION', `${field} must be an address list.`);
-    for (const person of data[field]) {
-      if (!/^[^\s@<>]+@[^\s@<>]+\.[^\s@<>]+$/.test(person.address)) {
-        throw new EmailError('VALIDATION', `Invalid ${field} address: ${person.address}`);
-      }
-    }
+    // V7: recipient syntax/domain validation is intentionally omitted.
   }
   if (sending && !data.to.length) throw new EmailError('VALIDATION', 'Enter at least one To recipient.');
   if (sending && !data.subject.trim()) throw new EmailError('VALIDATION', 'Enter a subject.');

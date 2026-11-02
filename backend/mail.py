@@ -164,7 +164,8 @@ def install_mail(app, database, settings):
         for address in [*data.to, *data.cc, *data.bcc]:
             recipient = db.scalar(select(User).where(User.email_address == address.address.strip().lower(), User.is_active.is_(True)))
             if not recipient:
-                raise HTTPException(422, "Internal mail accepts registered @adminator.test accounts only")
+                # V6: unknown/inactive recipients are silently skipped while Sent is saved.
+                continue
             recipients[recipient.id] = recipient
         row = owned(db, user.id, data.id) if data.id else None
         previous = json.loads(row.data_json) if row else None

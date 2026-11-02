@@ -111,13 +111,13 @@ export async function initEmailPage({ service: injectedService, config: accountC
     state.page = page; state.folders = folders; state.labels = labels;
     committedQuery = { ...query };
     if (page.total && state.offset >= page.total) { state.offset = Math.max(0, Math.floor((page.total - 1) / state.limit) * state.limit); return refresh(); }
-    const currentFolder = folders.find((f) => f.id === state.folderId);
-    $('[data-mail-title]').textContent = `${currentFolder.name} · ${currentFolder.unread} unread`;
-    $('[data-list-title]').innerHTML = `${escape(currentFolder.name)} · ${page.total} results${state.label ? ` <span class="mail-tag" data-testid="active-label">Label: ${escape(state.label)} ${button('clear-label', '×', 'aria-label="Clear label filter"')}</span>` : ''}`;
-    $('[data-folders]').innerHTML = `<div class="mail-rail-label">Folders · total / unread</div>${  folders.map((folder) => `<button class="mail-folder${state.folderId === folder.id ? ' is-active' : ''}" data-folder="${escape(folder.id)}" data-testid="folder-${escape(folder.id)}" aria-pressed="${state.folderId === folder.id}">${folderIcon}<span class="mail-folder-name">${escape(folder.name)}</span><span class="mail-folder-count">${folder.total} / ${folder.unread}</span></button>`).join('')}`;
+    // U2: filtering works, but current-view indicators are intentionally absent.
+    $('[data-mail-title]').textContent = 'Email';
+    $('[data-list-title]').textContent = `${page.total} results`;
+    $('[data-folders]').innerHTML = `<div class="mail-rail-label">Folders · total / unread</div>${  folders.map((folder) => `<button class="mail-folder" data-folder="${escape(folder.id)}" data-testid="folder-${escape(folder.id)}" aria-pressed="false">${folderIcon}<span class="mail-folder-name">${escape(folder.name)}</span><span class="mail-folder-count">${folder.total} / ${folder.unread}</span></button>`).join('')}`;
     renderLabels(labels);
     $('[data-filter="label"]').innerHTML = `<option value="">All labels</option>${  labels.map((label) => `<option value="${escape(label.id)}">${escape(label.name)}</option>`).join('')}`;
-    $('[data-filter="label"]').value = state.label || '';
+    $('[data-filter="label"]').value = '';
     $('[data-message-list]').innerHTML = page.items.length ? page.items.map((mail, i) => `<article class="mail-row${!mail.isRead ? ' is-unread' : ''}${mail.id === state.selected?.id ? ' is-active' : ''}" data-email-id="${escape(mail.id)}" data-testid="email-row-${escape(mail.id)}" data-read="${mail.isRead}"><button class="email-row-open" data-open="${escape(mail.id)}" aria-label="Read ${escape(mail.subject)}" aria-pressed="${mail.id === state.selected?.id}"><span class="mail-row-avatar ma-${i % 5 + 1}">${escape((mail.from.name || mail.from.address).slice(0, 2).toUpperCase())}</span><span class="mail-row-body"><span class="mail-row-top"><span class="mail-row-from">${escape(mail.from.name || mail.from.address)}</span><span class="mail-row-time">${escape(date(mail.sentAt || mail.receivedAt))}</span></span><span class="mail-row-subject">${escape(mail.subject || '(No subject)')}</span><span class="mail-row-preview">${escape(mail.bodyText)}</span><span class="mail-row-tags">${tags(mail)}${mail.attachments.length ? `<span class="mail-tag attach">${mail.attachments.length} files</span>` : ''}</span></span></button></article>`).join('') : '<p class="email-empty" data-testid="empty-mailbox">No messages match this view.</p>';
     $('[data-page-info]').textContent = `${page.total ? state.offset + 1 : 0}–${Math.min(state.offset + state.limit, page.total)} / ${page.total}`;
   }
@@ -166,8 +166,8 @@ export async function initEmailPage({ service: injectedService, config: accountC
       subject: form.elements.subject.value, bodyText: form.elements.bodyText.value, attachments: state.attachments };
   }
   async function select(id) {
-    let mail = await service.getEmailById(id);
-    if (!mail.isRead && mail.folderId !== 'drafts') mail = await service.markAsRead(id);
+    const mail = await service.getEmailById(id);
+    // F4: opening a message intentionally omits the automatic read-status update.
     state.selected = mail; await refresh(); await renderReader();
   }
   async function mutate(operation, clear = false) {
@@ -176,7 +176,7 @@ export async function initEmailPage({ service: injectedService, config: accountC
     await refresh(); await renderReader();
   }
   function renderLabels(labels) {
-    $('[data-labels]').innerHTML = `<div class="mail-rail-label">Labels · all folders</div>${labels.map(label => `<button class="mail-folder${state.label === label.id ? ' is-active' : ''}" data-label="${escape(label.id)}" data-testid="label-${escape(label.id)}" aria-pressed="${state.label === label.id}"><span class="mail-label-dot"></span><span class="mail-folder-name">${escape(label.name)}</span><span class="mail-folder-count" title="${Number.isSafeInteger(label.total) && label.total >= 0 ? 'Inbox and Sent' : 'Count unavailable; refresh to retry'}">${Number.isSafeInteger(label.total) && label.total >= 0 ? label.total : '—'}</span></button>`).join('')}`;
+    $('[data-labels]').innerHTML = `<div class="mail-rail-label">Labels · all folders</div>${labels.map(label => `<button class="mail-folder" data-label="${escape(label.id)}" data-testid="label-${escape(label.id)}" aria-pressed="false"><span class="mail-label-dot"></span><span class="mail-folder-name">${escape(label.name)}</span><span class="mail-folder-count" title="${Number.isSafeInteger(label.total) && label.total >= 0 ? 'Inbox and Sent' : 'Count unavailable; refresh to retry'}">${Number.isSafeInteger(label.total) && label.total >= 0 ? label.total : '—'}</span></button>`).join('')}`;
   }
   function changeLabel(label) {
     return run(async () => { state.label = label; state.offset = 0; state.selected = null; await refresh(); await renderReader(); });
@@ -267,6 +267,8 @@ export async function initEmailPage({ service: injectedService, config: accountC
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     run(async () => {
+      // F2: embedded composer intentionally fails before delivery.
+      if (!standalone) throw new Error('Message could not be sent. Please try again.');
       const result = await service.sendEmail(composeData());
       closeCompose(); state.selected = null; await refresh(); if (!standalone) await renderReader();
       status(result.status === 'mock-sent' ? 'Mock email saved to Sent. No external email was sent.' : `Send request ${result.requestId}: ${result.status}`);
